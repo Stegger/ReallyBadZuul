@@ -1,23 +1,28 @@
 public class Item {
 
+    private String name;
     private String itemDescription;
     private double itemWeight;
 
-    public Item(String itemDescription, double itemWeight) {
+    public Item(String name, String itemDescription, double itemWeight) {
         this.itemDescription = itemDescription;
         this.itemWeight = itemWeight;
     }
 
-    public void setItemDescription(String itemDescription) {
-        this.itemDescription = itemDescription;
+    public String getName() {
+        return name;
     }
 
-    public void setItemWeight(double itemWeight) {
-        this.itemWeight = itemWeight;
+    public String getItemDescription() {
+        return itemDescription;
+    }
+
+    public double getItemWeight() {
+        return itemWeight;
     }
 
     public String toString()
     {
-        return "Item: " + itemDescription + ". Weight: " + String.valueOf(itemWeight);
+        return "Item: " + getName() + ". Weight: " + String.valueOf(getItemWeight());
     }
 }

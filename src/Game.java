@@ -61,16 +61,16 @@ public class Game
         office.setExits("west", lab);
         office.setExits("down", cellar);
         cellar.setExits("up", office);
-        outside.addItems(new Item("Tree", 150));
-        outside.addItems(new Item("Bush", 12.6));
-        theater.addItems(new Item("Stage Prop", 6));
-        pub.addItems(new Item("Beer Glass", 0.5));
-        lab.addItems(new Item("Beaker", 0.5));
-        lab.addItems(new Item("Lab Coat", 0.7));
-        lab.addItems(new Item("Safety Goggles", 0.2));
-        office.addItems(new Item("Desk", 15));
-        office.addItems(new Item("Chair", 5));
-        cellar.addItems(new Item("Spooky Chest", 15));
+        outside.addItems(new Item("Tree", "a tall tree" , 150));
+        outside.addItems(new Item("Bush", "a dead bush" , 12.6));
+        theater.addItems(new Item("Stage Prop", "a prop for acting" ,6));
+        pub.addItems(new Item("Beer Glass", "beer... tasty" , 0.5));
+        lab.addItems(new Item("Beaker", "probably used for science stuff" , 0.5));
+        lab.addItems(new Item("Lab Coat", "put this on to become a scientist" , 0.7));
+        lab.addItems(new Item("Safety Goggles", "safety first" , 0.2));
+        office.addItems(new Item("Desk", "I could write on this" , 15));
+        office.addItems(new Item("Chair", "I could sit on this" , 5));
+        cellar.addItems(new Item("Spooky Chest", "Spooooooky..." , 15));
 
 
         currentRoom = outside;  // start game outside
