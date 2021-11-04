@@ -5,6 +5,7 @@ public class Item {
     private double itemWeight;
 
     public Item(String name, String itemDescription, double itemWeight) {
+        this.name = name;
         this.itemDescription = itemDescription;
         this.itemWeight = itemWeight;
     }
@@ -23,6 +24,6 @@ public class Item {
 
     public String toString()
     {
-        return "Item: " + getName() + ". Weight: " + String.valueOf(getItemWeight());
+        return "Item: " + getName() + ". Description: " + getItemDescription() + ". Weight: " + String.valueOf(getItemWeight());
     }
 }

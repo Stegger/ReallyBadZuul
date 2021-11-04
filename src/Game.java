@@ -62,7 +62,7 @@ public class Game
         office.setExits("down", cellar);
         cellar.setExits("up", office);
         outside.addItems(new Item("Tree", "a tall tree" , 150));
-        outside.addItems(new Item("Bush", "a dead bush" , 12.6));
+        outside.addItems(new Item("Bush", "a bushy bush" , 12.6));
         theater.addItems(new Item("Stage Prop", "a prop for acting" ,6));
         pub.addItems(new Item("Beer Glass", "beer... tasty" , 0.5));
         lab.addItems(new Item("Beaker", "probably used for science stuff" , 0.5));
