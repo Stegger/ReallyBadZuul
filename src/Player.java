@@ -1,19 +1,18 @@
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Stack;
 
 public class Player {
 
     private String name;
-    private Item heldItem;
+    private HashMap<String, Item> inventory = new HashMap<>();
     private Room currentRoom;
     private Room previousRoom;
     private final Stack<Room> roomStack = new Stack<>();
 
-    public Item getHeldItem() {
-        return heldItem;
-    }
-
-    public void setHeldItem(Item heldItem) {
-        this.heldItem = heldItem;
+    public HashMap<String, Item> getInventory() {
+        return inventory;
     }
 
     public Player(String name) {

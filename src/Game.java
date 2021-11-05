@@ -1,6 +1,4 @@
-import java.util.EmptyStackException;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 /**
  *  This class is the main class of the "World of Zuul" application. 
@@ -59,16 +57,16 @@ public class Game
         office.setExits("west", lab);
         office.setExits("down", cellar);
         cellar.setExits("up", office);
-        outside.addItems(new Item("Tree", "a tall tree" , 150));
-        outside.addItems(new Item("Bush", "a bushy bush" , 12.6));
-        theater.addItems(new Item("Stage Prop", "a prop for acting" ,6));
-        pub.addItems(new Item("Beer Glass", "beer... tasty" , 0.5));
-        lab.addItems(new Item("Beaker", "probably used for science stuff" , 0.5));
-        lab.addItems(new Item("Lab Coat", "put this on to become a scientist" , 0.7));
-        lab.addItems(new Item("Safety Goggles", "safety first" , 0.2));
-        office.addItems(new Item("Desk", "I could write on this" , 15));
-        office.addItems(new Item("Chair", "I could sit on this" , 5));
-        cellar.addItems(new Item("Spooky Chest", "Spooooooky..." , 15));
+        outside.addItems("tree", new Item("Tree", "a tall tree" , 150));
+        outside.addItems("bush",new Item("Bush", "a bushy bush" , 12.6));
+        theater.addItems("prop", new Item("Prop", "a prop for acting" ,6));
+        pub.addItems("glass", new Item("Glass", "beer... tasty" , 0.5));
+        lab.addItems("beaker", new Item("Beaker", "probably used for science stuff" , 0.5));
+        lab.addItems("coat", new Item("Coat", "put this on to become a scientist" , 0.7));
+        lab.addItems("goggles", new Item("Goggles", "safety first" , 0.2));
+        office.addItems("desk", new Item("Desk", "I could write on this" , 15));
+        office.addItems("chair", new Item("Chair", "I could sit on this" , 5));
+        cellar.addItems("chest", new Item("Chest", "Spooooooky..." , 15));
 
         player.setCurrentRoom(outside);
     }
@@ -143,6 +141,10 @@ public class Game
         else if(commandWord.equals("take"))
         {
             take(command);
+        }
+        else if(commandWord.equals("drop"))
+        {
+            drop(command);
         }
         return wantToQuit;
     }
@@ -236,10 +238,32 @@ public class Game
         }
 
         String itemTaken = command.getSecondWord();
-        int itemTakenInt = Integer.parseInt(itemTaken);
-        List<Item> itemsInRoom = player.getCurrentRoom().getItemsInRoom();
-        player.setHeldItem(itemsInRoom.get(itemTakenInt));
-        System.out.println(player.getHeldItem().toString());
+        String itemTakenLC = itemTaken.toLowerCase(Locale.ROOT);
+        HashMap<String, Item> itemsInRoom = player.getCurrentRoom().getItemsInRoom();
+        player.getInventory().put(itemTakenLC, itemsInRoom.get(itemTakenLC));
+        checkInventory();
+
+    }
+
+    private void checkInventory()
+    {
+        for (String i: player.getInventory().keySet())
+        {
+            System.out.println(i);
+        }
+    }
+
+    private void drop(Command command)
+    {
+        if (!command.hasSecondWord())
+        {
+            System.out.println("Drop what?");
+        }
+
+        String itemDropped = command.getSecondWord();
+        String itemDroppedLC = itemDropped.toLowerCase(Locale.ROOT);
+        player.getCurrentRoom().addItems(itemDroppedLC, player.getInventory().get(itemDroppedLC));
+        player.getInventory().remove(itemDroppedLC);
 
 
     }
