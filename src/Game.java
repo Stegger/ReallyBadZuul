@@ -21,9 +21,7 @@ import java.util.Stack;
 public class Game 
 {
     private Parser parser;
-    private Room currentRoom;
-    private Room previousRoom;
-    private Stack<Room> roomStack;
+    private Player player1 = new Player();
         
     /**
      * Create the game and initialise its internal map.
@@ -32,7 +30,6 @@ public class Game
     {
         createRooms();
         parser = new Parser();
-        roomStack = new Stack<>();
     }
 
     /**
@@ -72,8 +69,7 @@ public class Game
         office.addItems(new Item("Chair", "I could sit on this" , 5));
         cellar.addItems(new Item("Spooky Chest", "Spooooooky..." , 15));
 
-
-        currentRoom = outside;  // start game outside
+        player1.setCurrentRoom(outside);
     }
 
     /**
@@ -177,14 +173,14 @@ public class Game
         String direction = command.getSecondWord();
 
         // Try to leave current room.
-        Room nextRoom = currentRoom.getExit(direction);
+        Room nextRoom = player1.getCurrentRoom().getExit(direction);
         if (nextRoom == null) {
             System.out.println("There is no door!");
         }
         else {
-            previousRoom = currentRoom;
-            roomStack.push(previousRoom);
-            currentRoom = nextRoom;
+            player1.setPreviousRoom(player1.getCurrentRoom());
+            player1.getRoomStack().push(player1.getPreviousRoom());
+            player1.setCurrentRoom(nextRoom);
             printLocationInfo();
         }
     }
@@ -208,7 +204,7 @@ public class Game
     //looks around the room by printing a long description.
     private void look()
     {
-        System.out.println(currentRoom.getLongDescription());
+        System.out.println(player1.getCurrentRoom().getLongDescription());
     }
 
     private void eat()
@@ -219,7 +215,7 @@ public class Game
     private void back()
     {
         try {
-            currentRoom = roomStack.pop();
+            player1.setCurrentRoom(player1.getRoomStack().pop());
         }
         catch(EmptyStackException e) {
             System.out.println("Cannot go further back");
@@ -229,7 +225,7 @@ public class Game
 
     private void printLocationInfo()
     {
-        System.out.print(currentRoom.getLongDescription());
+        System.out.print(player1.getCurrentRoom().getLongDescription());
         System.out.println();
     }
 }
