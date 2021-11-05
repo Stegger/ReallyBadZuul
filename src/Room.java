@@ -62,6 +62,11 @@ public class Room
         return returnString;
     }
 
+    public List<Item> getItemsInRoom()
+    {
+        return itemsInRoom;
+    }
+
     /**
      * @return The description of the room.
      */

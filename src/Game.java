@@ -1,5 +1,6 @@
 import java.util.EmptyStackException;
-import java.util.Stack;
+import java.util.List;
+import java.util.Scanner;
 
 /**
  *  This class is the main class of the "World of Zuul" application. 
@@ -21,7 +22,7 @@ import java.util.Stack;
 public class Game 
 {
     private Parser parser;
-    private Player player1 = new Player();
+    private Player player = new Player("Player 1");
         
     /**
      * Create the game and initialise its internal map.
@@ -69,7 +70,7 @@ public class Game
         office.addItems(new Item("Chair", "I could sit on this" , 5));
         cellar.addItems(new Item("Spooky Chest", "Spooooooky..." , 15));
 
-        player1.setCurrentRoom(outside);
+        player.setCurrentRoom(outside);
     }
 
     /**
@@ -139,6 +140,10 @@ public class Game
         {
             back();
         }
+        else if(commandWord.equals("take"))
+        {
+            take(command);
+        }
         return wantToQuit;
     }
 
@@ -173,14 +178,14 @@ public class Game
         String direction = command.getSecondWord();
 
         // Try to leave current room.
-        Room nextRoom = player1.getCurrentRoom().getExit(direction);
+        Room nextRoom = player.getCurrentRoom().getExit(direction);
         if (nextRoom == null) {
             System.out.println("There is no door!");
         }
         else {
-            player1.setPreviousRoom(player1.getCurrentRoom());
-            player1.getRoomStack().push(player1.getPreviousRoom());
-            player1.setCurrentRoom(nextRoom);
+            player.setPreviousRoom(player.getCurrentRoom());
+            player.getRoomStack().push(player.getPreviousRoom());
+            player.setCurrentRoom(nextRoom);
             printLocationInfo();
         }
     }
@@ -204,7 +209,7 @@ public class Game
     //looks around the room by printing a long description.
     private void look()
     {
-        System.out.println(player1.getCurrentRoom().getLongDescription());
+        System.out.println(player.getCurrentRoom().getLongDescription());
     }
 
     private void eat()
@@ -215,7 +220,7 @@ public class Game
     private void back()
     {
         try {
-            player1.setCurrentRoom(player1.getRoomStack().pop());
+            player.setCurrentRoom(player.getRoomStack().pop());
         }
         catch(EmptyStackException e) {
             System.out.println("Cannot go further back");
@@ -223,9 +228,25 @@ public class Game
         printLocationInfo();
     }
 
+    private void take(Command command)
+    {
+        if (!command.hasSecondWord())
+        {
+            System.out.println("Take what?");
+        }
+
+        String itemTaken = command.getSecondWord();
+        int itemTakenInt = Integer.parseInt(itemTaken);
+        List<Item> itemsInRoom = player.getCurrentRoom().getItemsInRoom();
+        player.setHeldItem(itemsInRoom.get(itemTakenInt));
+        System.out.println(player.getHeldItem().toString());
+
+
+    }
+
     private void printLocationInfo()
     {
-        System.out.print(player1.getCurrentRoom().getLongDescription());
+        System.out.print(player.getCurrentRoom().getLongDescription());
         System.out.println();
     }
 }

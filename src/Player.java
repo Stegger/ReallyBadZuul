@@ -3,9 +3,18 @@ import java.util.Stack;
 public class Player {
 
     private String name;
+    private Item heldItem;
     private Room currentRoom;
     private Room previousRoom;
     private final Stack<Room> roomStack = new Stack<>();
+
+    public Item getHeldItem() {
+        return heldItem;
+    }
+
+    public void setHeldItem(Item heldItem) {
+        this.heldItem = heldItem;
+    }
 
     public Player(String name) {
         this.name = name;
