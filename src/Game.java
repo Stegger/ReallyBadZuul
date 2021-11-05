@@ -20,7 +20,7 @@ import java.util.*;
 public class Game 
 {
     private Parser parser;
-    private Player player = new Player("Player 1");
+    private Player player = new Player("Player 1", 10);
         
     /**
      * Create the game and initialise its internal map.
@@ -59,6 +59,7 @@ public class Game
         cellar.setExits("up", office);
         outside.addItems("tree", new Item("Tree", "a tall tree" , 150));
         outside.addItems("bush",new Item("Bush", "a bushy bush" , 12.6));
+        outside.addItems("rock", new Item("Rock", "don't throw this", 0.2));
         theater.addItems("prop", new Item("Prop", "a prop for acting" ,6));
         pub.addItems("glass", new Item("Glass", "beer... tasty" , 0.5));
         lab.addItems("beaker", new Item("Beaker", "probably used for science stuff" , 0.5));
@@ -239,9 +240,22 @@ public class Game
 
         String itemTaken = command.getSecondWord();
         String itemTakenLC = itemTaken.toLowerCase(Locale.ROOT);
-        HashMap<String, Item> itemsInRoom = player.getCurrentRoom().getItemsInRoom();
-        player.getInventory().put(itemTakenLC, itemsInRoom.get(itemTakenLC));
-        checkInventory();
+        HashMap<String, Item> itemsInRoom= player.getCurrentRoom().getItemsInRoom();
+        Item pickedItem = itemsInRoom.get(itemTakenLC);
+
+        if(!itemsInRoom.containsKey(itemTakenLC)) {
+            System.out.println("That item doesn't exist.");
+        }
+        else if(pickedItem != null && pickedItem.getItemWeight() <= player.getCarryCapacity()){
+            player.getInventory().put(itemTakenLC, itemsInRoom.get(itemTakenLC));
+            itemsInRoom.remove(itemTakenLC);
+            player.setCarryCapacity(player.getCarryCapacity()-player.getInventory().get(itemTakenLC).getItemWeight());
+            checkInventory();
+        }
+        else
+        {
+            System.out.println("That item is too heavy");
+        }
 
     }
 
@@ -262,8 +276,17 @@ public class Game
 
         String itemDropped = command.getSecondWord();
         String itemDroppedLC = itemDropped.toLowerCase(Locale.ROOT);
-        player.getCurrentRoom().addItems(itemDroppedLC, player.getInventory().get(itemDroppedLC));
-        player.getInventory().remove(itemDroppedLC);
+
+        if (!player.getInventory().containsKey(itemDroppedLC))
+        {
+            System.out.println("You don't have that item");
+        }
+        else {
+            Item itemWeDrop = player.getInventory().get(itemDroppedLC);
+            player.getCurrentRoom().addItems(itemDroppedLC, itemWeDrop);
+            player.setCarryCapacity(player.getCarryCapacity() + itemWeDrop.getItemWeight());
+            player.getInventory().remove(itemDroppedLC);
+        }
 
 
     }

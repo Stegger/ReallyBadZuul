@@ -6,6 +6,7 @@ import java.util.Stack;
 public class Player {
 
     private String name;
+    private double carryCapacity;
     private HashMap<String, Item> inventory = new HashMap<>();
     private Room currentRoom;
     private Room previousRoom;
@@ -15,8 +16,17 @@ public class Player {
         return inventory;
     }
 
-    public Player(String name) {
+    public Player(String name, double carryCapacity) {
         this.name = name;
+        this.carryCapacity = carryCapacity;
+    }
+
+    public double getCarryCapacity() {
+        return carryCapacity;
+    }
+
+    public void setCarryCapacity(double carryCapacity) {
+        this.carryCapacity = carryCapacity;
     }
 
     public Stack<Room> getRoomStack() {
