@@ -2,6 +2,7 @@ public class Item {
 
     private String name;
     private String itemDescription;
+    private boolean edible;
     private double itemWeight;
 
     public Item(String name, String itemDescription, double itemWeight) {
@@ -20,6 +21,10 @@ public class Item {
 
     public double getItemWeight() {
         return itemWeight;
+    }
+
+    public boolean isEdible() {
+        return edible;
     }
 
     public String toString()

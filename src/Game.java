@@ -62,6 +62,7 @@ public class Game
         outside.addItems("rock", new Item("Rock", "don't throw this", 0.2));
         theater.addItems("prop", new Item("Prop", "a prop for acting" ,6));
         pub.addItems("glass", new Item("Glass", "beer... tasty" , 0.5));
+        pub.addItems("powder", new Item("Powder", "a mysterious white powder...", 0.01));
         lab.addItems("beaker", new Item("Beaker", "probably used for science stuff" , 0.5));
         lab.addItems("coat", new Item("Coat", "put this on to become a scientist" , 0.7));
         lab.addItems("goggles", new Item("Goggles", "safety first" , 0.2));
@@ -133,7 +134,7 @@ public class Game
         }
         else if (commandWord.equals("eat"))
         {
-            eat();
+            eat(command);
         }
         else if(commandWord.equals("back"))
         {
@@ -146,6 +147,10 @@ public class Game
         else if(commandWord.equals("drop"))
         {
             drop(command);
+        }
+        else if(commandWord.equals("items"))
+        {
+            items();
         }
         return wantToQuit;
     }
@@ -215,9 +220,27 @@ public class Game
         System.out.println(player.getCurrentRoom().getLongDescription());
     }
 
-    private void eat()
+    private void eat(Command command)
     {
-        System.out.println("You eat an apple, and your hunger has been satiated.");
+        String itemToEat = command.getSecondWord();
+        String itemToEatLC = itemToEat.toLowerCase(Locale.ROOT);
+
+        if (!command.hasSecondWord())
+        {
+            System.out.println("Eat what?");
+        }
+        if (itemToEatLC.equals("powder") && itemInInventory(itemToEatLC))
+        {
+            player.setCarryCapacity(player.getCarryCapacity()+10);
+            player.getInventory().remove(itemToEatLC);
+            System.out.println("Damn that's some good shit.");
+            System.out.println("I feel so strong!!!");
+        }
+        else
+        {
+            System.out.println("You can't eat that.");
+        }
+
     }
 
     private void back()
@@ -233,24 +256,22 @@ public class Game
 
     private void take(Command command)
     {
-        if (!command.hasSecondWord())
-        {
-            System.out.println("Take what?");
-        }
-
         String itemTaken = command.getSecondWord();
         String itemTakenLC = itemTaken.toLowerCase(Locale.ROOT);
         HashMap<String, Item> itemsInRoom= player.getCurrentRoom().getItemsInRoom();
         Item pickedItem = itemsInRoom.get(itemTakenLC);
 
-        if(!itemsInRoom.containsKey(itemTakenLC)) {
+        if (!command.hasSecondWord())
+        {
+            System.out.println("Take what?");
+        }
+        if(itemInInventory(itemTakenLC)) {
             System.out.println("That item doesn't exist.");
         }
         else if(pickedItem != null && pickedItem.getItemWeight() <= player.getCarryCapacity()){
             player.getInventory().put(itemTakenLC, itemsInRoom.get(itemTakenLC));
             itemsInRoom.remove(itemTakenLC);
-            player.setCarryCapacity(player.getCarryCapacity()-player.getInventory().get(itemTakenLC).getItemWeight());
-            checkInventory();
+            player.setCarryCapacity(player.getCarryCapacity()-pickedItem.getItemWeight());
         }
         else
         {
@@ -259,36 +280,51 @@ public class Game
 
     }
 
-    private void checkInventory()
+    private void items()
     {
+        double totalWeight = 0;
         for (String i: player.getInventory().keySet())
         {
-            System.out.println(i);
+            System.out.println(player.getInventory().get(i));
+            double weight = player.getInventory().get(i).getItemWeight();
+            totalWeight += weight;
         }
+        System.out.printf("%1.27s","Total Weight of Items: " + totalWeight);
+        System.out.println();
     }
 
     private void drop(Command command)
     {
+        String itemDropped = command.getSecondWord();
+        String itemDroppedLC = itemDropped.toLowerCase(Locale.ROOT);
+
         if (!command.hasSecondWord())
         {
             System.out.println("Drop what?");
         }
-
-        String itemDropped = command.getSecondWord();
-        String itemDroppedLC = itemDropped.toLowerCase(Locale.ROOT);
-
-        if (!player.getInventory().containsKey(itemDroppedLC))
+        if (!itemInInventory(itemDroppedLC))
         {
             System.out.println("You don't have that item");
         }
-        else {
+        else
+        {
             Item itemWeDrop = player.getInventory().get(itemDroppedLC);
             player.getCurrentRoom().addItems(itemDroppedLC, itemWeDrop);
             player.setCarryCapacity(player.getCarryCapacity() + itemWeDrop.getItemWeight());
             player.getInventory().remove(itemDroppedLC);
         }
+    }
 
-
+    private boolean itemInInventory(String itemCheck)
+    {
+        if(player.getInventory().containsKey(itemCheck))
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
 
     private void printLocationInfo()
