@@ -1,3 +1,5 @@
+import java.util.*;
+
 /**
  * Class Room - a room in an adventure game.
  *
@@ -14,11 +16,9 @@
  */
 public class Room 
 {
-    public String description;
-    public Room northExit;
-    public Room southExit;
-    public Room eastExit;
-    public Room westExit;
+    private String description;
+    private HashMap<String, Room> exits;
+    private HashMap<String, Item> itemsInRoom;
 
     /**
      * Create a room described "description". Initially, it has
@@ -29,26 +29,42 @@ public class Room
     public Room(String description) 
     {
         this.description = description;
+        exits = new HashMap<String, Room>();
+        itemsInRoom = new HashMap<String, Item>();
     }
 
     /**
      * Define the exits of this room.  Every direction either leads
      * to another room or is null (no exit there).
-     * @param north The north exit.
-     * @param east The east east.
-     * @param south The south exit.
-     * @param west The west exit.
      */
-    public void setExits(Room north, Room east, Room south, Room west) 
+    public void setExits(String direction, Room neighbor)
     {
-        if(north != null)
-            northExit = north;
-        if(east != null)
-            eastExit = east;
-        if(south != null)
-            southExit = south;
-        if(west != null)
-            westExit = west;
+        exits.put(direction, neighbor);
+    }
+
+    public Room getExit(String direction)
+    {
+        return exits.get(direction);
+    }
+
+    public void addItems(String name, Item item)
+    {
+        itemsInRoom.put(name, item);
+    }
+
+    public String getItems()
+    {
+        String returnString = "";
+        for (String i : itemsInRoom.keySet())
+        {
+            returnString += itemsInRoom.get(i).toString() + "\n";
+        }
+        return returnString;
+    }
+
+    public HashMap<String, Item> getItemsInRoom()
+    {
+        return itemsInRoom;
     }
 
     /**
@@ -57,6 +73,22 @@ public class Room
     public String getDescription()
     {
         return description;
+    }
+
+    public String getExitString()
+    {
+        String returnString = "Exits: ";
+        Set<String> keys = exits.keySet();
+        for (String exit : keys)
+        {
+            returnString += " " + exit;
+        }
+        return returnString;
+    }
+
+    public String getLongDescription()
+    {
+        return "You are " + description + ".\n" + getExitString() + ".\n" + getItems();
     }
 
 }
